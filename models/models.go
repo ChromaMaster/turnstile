@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -32,6 +33,9 @@ func InitDatabase() (db *gorm.DB, err error) {
 	switch config.Type {
 
 	case "sqlite3":
+		if _, err := os.Stat("data"); os.IsNotExist(err) {
+			os.Mkdir("data", 0755)
+		}
 		db, err = gorm.Open(config.Type, config.Path)
 	case "mysql":
 		uri := "%s:%s@%s:%d/%s?charset=utf8&parseTime=True&loc=Local"
